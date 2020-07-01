@@ -12,22 +12,36 @@ public class Config {
     private String trainDataFile;
     private String outputFolder;
     private int trainingInterval;
+    private static Config config;
 
-    public Config(String configFile){
-        if(configFile == null || "".equals(configFile)){
+    private Config(){};
+    //get args from main(args[0])
+    public static Config getInstance(String configFile){
+        if(configFile == null || "".equals(configFile)) {
             throw new IllegalArgumentException("config does not contain the key ");
         }
 
+        if (config == null) {
+            config = new Config();
+            config.properties = new Properties();
+            try(BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(configFile))){
+                config.properties.load(fileInputStream);
+                config.trainDataFile = config.properties.getProperty("trainDataFile");
+                config.outputFolder = config.properties.getProperty("outputFolder");
+                config.trainingInterval = Integer.parseInt(config.properties.getProperty("trainingInterval"));
 
-        this.properties = new Properties();
-        try(BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(configFile))){
-            properties.load(fileInputStream);
-            trainDataFile = properties.getProperty("trainDataFile");
-            outputFolder = properties.getProperty("outputFolder");
-            trainingInterval = Integer.parseInt(properties.getProperty("trainingInterval"));
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        return config;
+
+    }
+    public static Config getInstance(){
+        if(config == null){
+            throw new IllegalArgumentException("Must Init first");
+        }
+        return config;
     }
 
     public String getTrainDataFile() {

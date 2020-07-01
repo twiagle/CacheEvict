@@ -11,8 +11,9 @@ public class Cache {
     //singleton
     private static Cache cache = new Cache();
     //id, size
-    private final int SAMPLE = 64;
-    private long cacheSize = 0;
+    private final static int SAMPLE = 64;
+    private final static long MAX_CACHE_SIZE = 111;
+    private long usedCacheSize = 0;//usedCacheSize
     //overall single cache map
     private final HashMap<Integer, Integer> map = new HashMap<>(65536);
 
