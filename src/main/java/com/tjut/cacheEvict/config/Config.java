@@ -12,6 +12,10 @@ public class Config {
     private String trainDataFile;
     private String outputFolder;
     private int trainingInterval;
+    private int beladyBoundry;
+    private int sampleNum;
+    private int maxCacheSize;
+    private int featureNum;
     private static Config config;
 
     private Config(){};
@@ -29,6 +33,10 @@ public class Config {
                 config.trainDataFile = config.properties.getProperty("trainDataFile");
                 config.outputFolder = config.properties.getProperty("outputFolder");
                 config.trainingInterval = Integer.parseInt(config.properties.getProperty("trainingInterval"));
+                config.beladyBoundry = Integer.parseInt(config.properties.getProperty("beladyBoundry"));
+                config.maxCacheSize = Integer.parseInt(config.properties.getProperty("maxCacheSize"));
+                config.sampleNum = Integer.parseInt(config.properties.getProperty("sampleNum"));
+                config.featureNum = Integer.parseInt(config.properties.getProperty("featureNum"));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -55,4 +63,20 @@ public class Config {
     public int getTrainingInterval() {
         return trainingInterval;
     }
+
+    public int getBeladyBoundry() {
+        return beladyBoundry;
+    }
+
+    public int getMaxCacheSize() {
+        return maxCacheSize;
+    }
+
+    public int getSampleNum() {
+        return sampleNum;
+    }
+    public int getFeatureNum() {
+        return featureNum;
+    }
+
 }

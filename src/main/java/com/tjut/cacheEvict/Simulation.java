@@ -11,7 +11,10 @@ import java.util.HashMap;
 //cd jar's directory : java -cp  CacheEvict-1.0-SNAPSHOT.jar com.tjut.cacheEvict.Simulation ../test.properties
 public class Simulation {
     public static void main(String[] args) {
-        Config config = Config.getInstance(args[0]);
+        init(args[0]);
+    }
+    static void init(String propertyFile){
+        Config config = Config.getInstance(propertyFile);// this should be first
         System.out.println(config.getTrainDataFile());
     }
 }
