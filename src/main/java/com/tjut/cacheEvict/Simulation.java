@@ -1,6 +1,7 @@
 package com.tjut.cacheEvict;
 
 import com.tjut.cacheEvict.config.Config;
+import com.tjut.cacheEvict.feature.PreStudySampleLib;
 
 import java.util.HashMap;
 
@@ -12,6 +13,11 @@ import java.util.HashMap;
 public class Simulation {
     public static void main(String[] args) {
         init(args[0]);
+        PreStudySampleLib preStudySampleLib = new PreStudySampleLib();
+        preStudySampleLib.generateSamples(req);
+
+
+
     }
     static void init(String propertyFile){
         Config config = Config.getInstance(propertyFile);// this should be first

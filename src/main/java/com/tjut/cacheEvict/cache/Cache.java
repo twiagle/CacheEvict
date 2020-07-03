@@ -9,6 +9,7 @@ import java.util.Random;
 /**
  * @author tb
  * @date 7/1/20-1:35 PM
+ * cache size should smaller than FeatureLib, so if sampled objs cannot find in FeatureLib,just remove
  */
 public class Cache {
     //singleton
