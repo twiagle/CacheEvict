@@ -1,9 +1,9 @@
-package com.tjut.cacheEvict.feature;
+package com.tjut.cacheEvict.sample;
 
 import com.tjut.cacheEvict.config.Config;
 import com.tjut.cacheEvict.config.Request;
+import com.tjut.cacheEvict.feature.FeatureLib;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -15,32 +15,21 @@ import java.util.*;
 public class PreStudySampleLib extends AbstractSampleLib {
     public PreStudySampleLib(){}
 
-    @Override
-    public List<TrainingSample> generateSamples(Request req){
-        //first update featureLib
-
-        List<TrainingSample> sample = new ArrayList<>();
+    public void generateSamples(Request req){
         //expire window
         List<Integer> expiredObject = FeatureLib.getInstance().getExpiredObject(req);
         if(expiredObject != null && expiredObject.size()>0){
             for (Integer objID : expiredObject) {
-                Feature feature = FeatureLib.getInstance().getFeature(objID);
                 TrainingSample ts = new TrainingSample(objID, Config.getInstance().getBeladyBoundry());
-                sample.add(ts);
+                labeledFeatureLib.put(objID, ts);//expired obj
             }
         }
 
         //add each obj only once
         int objID = req.getObjID();
-        if(lib.containsKey(objID)){
-        }else{//get sample in the window
-            Feature feature = FeatureLib.getInstance().getFeature(req.getObjID());
+        if(labeledFeatureLib.containsKey(objID)){
             TrainingSample ts = new TrainingSample(objID,req.getReqTimeStamp());
-            sample.add(ts);
-            lib.put(req.getObjID(), ts);
+            labeledFeatureLib.put(req.getObjID(), ts);//mark as generated
         }
-        //
-        FeatureLib.getInstance().updateFeatureLib(req);
-        return sample;
     }
 }

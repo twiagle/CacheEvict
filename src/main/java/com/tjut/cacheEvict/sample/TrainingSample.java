@@ -1,7 +1,9 @@
-package com.tjut.cacheEvict.feature;
+package com.tjut.cacheEvict.sample;
 
 import com.tjut.cacheEvict.config.Config;
 import com.tjut.cacheEvict.config.Request;
+import com.tjut.cacheEvict.feature.Feature;
+import com.tjut.cacheEvict.feature.FeatureLib;
 
 /**
  * @author tb

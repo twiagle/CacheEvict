@@ -20,7 +20,7 @@ public class Config {
 
     private Config(){};
     //get args from main(args[0])
-    public static Config getInstance(String configFile){
+    public static Config ConfigInstance(String configFile){
         if(configFile == null || "".equals(configFile)) {
             throw new IllegalArgumentException("config does not contain the key ");
         }

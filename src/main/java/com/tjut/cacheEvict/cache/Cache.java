@@ -1,9 +1,12 @@
 package com.tjut.cacheEvict.cache;
 
 import com.tjut.cacheEvict.config.Config;
-import com.tjut.cacheEvict.learning.IncrmntLearn;
+import com.tjut.cacheEvict.learning.IncrementalLearn;
 
+import javax.swing.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -11,7 +14,7 @@ import java.util.Random;
  * @date 7/1/20-1:35 PM
  * cache size should smaller than FeatureLib, so if sampled objs cannot find in FeatureLib,just remove
  */
-public class Cache {
+public class Cache{
     //singleton
     private static Cache cache;
     //id, size
@@ -21,22 +24,40 @@ public class Cache {
     //overall single cache map
     private HashMap<Integer, Integer> map;
 
-    private Cache(){};
-    public static Cache getInstance(){
+    private Cache(TmpLRUCache<Integer,Integer> tmpLRUCache){
+//        this.map = new HashMap<>(map);// LinkedHashMap -> hashMap, invoke frequent resize()
+
+        map = new HashMap<>(tmpLRUCache.getCapacity(), 0.75f);
+        for (Map.Entry<Integer, Integer> e : tmpLRUCache.entrySet()) {
+            int key = e.getKey();
+            int value = e.getValue();
+            map.put(key,value);
+        }
+
+        cache.maxCacheSize = Config.getInstance().getMaxCacheSize();
+        cache.sampleNum = Config.getInstance().getSampleNum();
+        cache.usedCacheSize = 0;
+    }
+
+    public static Cache ConfigInstance(TmpLRUCache<Integer,Integer> tmpLRUCache){
         if(cache == null){
-            cache = new Cache();
-            cache.maxCacheSize = Config.getInstance().getMaxCacheSize();
-            cache.sampleNum = Config.getInstance().getSampleNum();
-            cache.usedCacheSize = 0;
-            cache.map = new HashMap<>(65536);
+            cache = new Cache(tmpLRUCache);
         }
         return cache;
     }
+
+    public static Cache getInstance(){
+        if(cache == null){
+            throw new IllegalArgumentException("Must Init first");
+        }
+        return cache;
+    }
+
     //randomly get 64 keys from keySet
-    public Integer[] getSampledKeys(){
+    public int[] getSampledKeys(){
         Random generator = new Random();
         Integer[] keySet = (Integer[])map.keySet().toArray();
-        Integer[] sampledKeys = new Integer[cache.sampleNum];
+        int[] sampledKeys = new int[cache.sampleNum];
         for (int i = 0; i < 64; i++) {
             sampledKeys[i] = keySet[generator.nextInt(keySet.length)];
         }
@@ -58,12 +79,11 @@ public class Cache {
     }
 
     public void put(Integer key, Integer size){
-        map.put(key, size);
         usedCacheSize += size;
         while(usedCacheSize > maxCacheSize){
-            int evictedSize = IncrmntLearn.evict(getSampledKeys());
+            int evictedSize = IncrementalLearn.evict(getSampledKeys());
             usedCacheSize -= evictedSize;
         }
+        map.put(key, size);
     }
-
 }
