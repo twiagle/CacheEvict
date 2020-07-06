@@ -49,9 +49,10 @@ public class ILSampleLib extends AbstractSampleLib {
             labeledFeatureLib.put(req.getObjID(), ts);//mark as generated
         }
 
-        /*publish to IncrementalLearn*/
+        /*publish to IncrementalLearn, and start to accumulate samples for next round*/
         if(labeledFeatureLib.size() >= Config.getInstance().getTrainingInterval()){
             IncrementalLearn.selfUpdate();
+            ILSampleLib.clear();
         }
     }
 }

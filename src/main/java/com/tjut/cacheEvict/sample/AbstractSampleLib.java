@@ -13,7 +13,7 @@ public abstract class AbstractSampleLib {
     public HashMap<Integer, TrainingSample> getLabeledFeatureLib() {
         return labeledFeatureLib;
     }
-    public void clear(){
+    public static void clear(){
         labeledFeatureLib.clear();
     }
 }
