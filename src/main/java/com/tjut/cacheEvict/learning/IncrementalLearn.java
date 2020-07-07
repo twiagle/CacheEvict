@@ -2,6 +2,7 @@ package com.tjut.cacheEvict.learning;
 
 import com.tjut.cacheEvict.sample.AbstractSampleLib;
 import com.tjut.cacheEvict.sample.ILSampleLib;
+import moa.classifiers.meta.LearnNSE;
 
 /**
  * @author tb
@@ -9,10 +10,16 @@ import com.tjut.cacheEvict.sample.ILSampleLib;
  */
 public class IncrementalLearn {
 
-    ILSampleLib ilSampleLib;
+    LearnNSE learnNSE;
+    static IncrementalLearn incrementalLearn = new IncrementalLearn();
 
-    public IncrementalLearn(ILSampleLib ilSampleLib) {
-        this.ilSampleLib = ilSampleLib;
+    public static IncrementalLearn getInstance() {
+        return incrementalLearn;
+    }
+
+    private IncrementalLearn() {
+        learnNSE = new LearnNSE();
+        learnNSE.resetLearningImpl();
     }
 
     public static int evict(int[] evictCandidates){
